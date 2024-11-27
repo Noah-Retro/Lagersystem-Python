@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuen Artikel hinzufügen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="add-item-page">
+    <span class="menu-icon" onclick="openMenu()">&#9776; Menü</span>
+
+    <!-- Slide-in Menü -->
+    <div id="sideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="close-btn" onclick="closeMenu()">&times;</a>
+        <a href="{{ url_for('connect_database') }}">Datenbank verbinden</a>
+        <a href="{{ url_for('add_item') }}">Neuen Artikel hinzufügen</a>
+        <a href="{{ url_for('admin_page') }}">Admin Seite</a>
+    </div>
+    
+    <h1>Neuen Artikel Hinzufügen</h1>
+
+    <form action="{{ url_for('add_item') }}" method="post" enctype="multipart/form-data" class="form-container">
+        <!-- Name des Artikels -->
+        <div class="form-group">
+            <label for="name">Artikelname:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <!-- Menge des Artikels -->
+        <div class="form-group">
+            <label for="menge">Menge:</label>
+            <input type="number" id="menge" name="menge" required>
+        </div>
+
+        <!-- Preis des Artikels -->
+        <div class="form-group">
+            <label for="preis">Preis (€):</label>
+            <input type="number" id="preis" name="preis" step="0.01" required>
+        </div>
+
+        <!-- Beschreibung des Artikels -->
+        <div class="form-group">
+            <label for="beschreibung">Beschreibung:</label>
+            <textarea id="beschreibung" name="beschreibung" rows="4" required></textarea>
+        </div>
+
+        <!-- Lagerort des Artikels -->
+        <div class="form-group">
+            <label for="lagerort">Lagerort:</label>
+            <input type="text" id="lagerort" name="lagerort" required>
+        </div>
+
+        <!-- Bild des Artikels -->
+        <div class="form-group">
+            <label for="bild">Artikelbild:</label>
+            <input type="file" id="bild" name="bild" accept="image/*" required>
+        </div>
+
+        <!-- Stat Sheet des Artikels -->
+        <div class="form-group">
+            <label for="stat_sheet">Stat Sheet (optional):</label>
+            <input type="file" id="stat_sheet" name="stat_sheet" accept="image/*">
+        </div>
+
+        <!-- Absenden Button -->
+        <div class="form-group">
+            <button type="submit">Artikel Hinzufügen</button>
+        </div>
+    </form>
+
+    <a href="{{ url_for('index') }}">Zurück zur Übersicht</a>
+</body>
+</html>

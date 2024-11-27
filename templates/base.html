@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artikelübersicht</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+    <!-- Slide-In Menü -->
+    <div id="menu">
+        <a href="javascript:void(0)" class="close-btn" onclick="closeMenu()">&times;</a>
+        <a href="{{ url_for('connect_database') }}">Datenbank verbinden</a>
+        <a href="{{ url_for('add_item') }}">Neuen Artikel hinzufügen</a>
+        <a href="{{ url_for('admin_page') }}">Admin-Seite</a>
+    </div>
+
+    <!-- Button zum Öffnen des Menüs -->
+    <button id="open_btn" class="open-btn" onclick="openMenu()">☰ Menü</button>
+
+
+
+    <div class="search-container">
+        <form action="{{ url_for('search_item') }}" method="get">
+            <div>
+                <input type="text" name="search_term" id="search_term" placeholder="Artikel suchen...">
+                <button type="submit">Suchen</button>
+            </div>
+        </form>
+    </div>
+    <div>
+        {% block content %} {% endblock %}
+    </div>
+
+    <script>
+        function openMenu() {
+            document.getElementById("menu").style.width = "250px"; // Öffnet das Menü
+            document.getElementById("open_btn").style.visibility = "hidden";
+        }
+
+        function closeMenu() {
+            document.getElementById("menu").style.width = "0"; // Schließt das Menü
+            document.getElementById("open_btn").style.visibility = "visible";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="add-item-container">
+    <h2>Fülle die Informationen aus:</h2>
+
+    <!-- Feedback-Nachricht, falls erfolgreich oder fehlerhaft -->
+    {% if message %}
+    <div class="message {% if message_type == 'success' %}success{% else %}error{% endif %}">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    <form action="{{ url_for('add_item') }}" method="post" enctype="multipart/form-data">
+        <label for="name">Artikelname</label>
+        <input type="text" id="name" name="name" required placeholder="Name des Artikels">
+
+        <label for="menge">Menge</label>
+        <input type="number" id="menge" name="menge" required placeholder="Menge des Artikels">
+
+        <label for="preis">Preis</label>
+        <input type="number" id="preis" name="preis" required placeholder="Preis des Artikels" step="0.01">
+
+        <label for="lagerort">Lagerort</label>
+        <input type="text" id="lagerort" name="lagerort" required placeholder="Lagerort des Artikels">
+
+        <label for="beschreibung">Beschreibung</label>
+        <input type="text" id="beschreibung" name="beschreibung" required placeholder="Beschreibung des Artikels">
+
+        <label for="bild">Hauptbild des Artikels</label>
+        <input type="file" id="bild" name="bild" accept="image/*" required>
+
+        <label for="stat_sheet">Stat Sheet</label>
+        <input type="file" id="stat_sheet" name="stat_sheet" accept="image/*" required>
+
+        <button type="submit">Artikel Hinzufügen</button>
+    </form>
+</div>
+{% endblock %}

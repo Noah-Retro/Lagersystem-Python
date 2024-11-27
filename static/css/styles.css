@@ -1,0 +1,287 @@
+body {
+    background-color: #f4f4f4; /* Sanfter Hintergrund */
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Header */
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #4CAF50;
+    color: white;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Formular zur Artikelsuche */
+.search-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 80px;
+    margin-bottom: 30px;
+    flex-shrink: 0;
+    flex-direction: column;
+}
+
+.search-container input[type="text"] {
+    padding: 12px;
+    font-size: 1rem;
+    width: 60%;
+    max-width: 1000px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.search-container button {
+    padding: 12px 20px;
+    font-size: 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: #45a049;
+}
+
+/* Suchergebnisse Tabelle */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1.1rem;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table td img {
+    max-width: 150px;
+    max-height: 150px;
+    object-fit: contain;
+}
+
+/* Links und Interaktionen */
+table td a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+table td a:hover {
+    text-decoration: underline;
+}
+
+/* Button zur Artikelformularseite */
+.add-item-link {
+    display: inline-block;
+    margin-top: 30px;
+    text-align: center;
+    padding: 12px 25px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 200px;
+    margin-left: calc(50% - 100px); /* Zentriert den Button */
+}
+
+.add-item-link:hover {
+    background-color: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .search-container input[type="text"] {
+        width: 80%;
+    }
+
+    .search-container button {
+        width: 100%;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+
+    table td img {
+        max-width: 120px;
+        max-height: 120px;
+    }
+
+    .add-item-link {
+        width: 90%;
+        margin-left: 5%;
+    }
+}
+
+#menu {
+    height: 100%; 
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #333;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+#menu a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+}
+
+#menu a:hover {
+    color: #f1f1f1;
+}
+
+#menu .close-btn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+/* Stil für den offenen Zustand des Menüs */
+.open-btn {
+    font-size: 30px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+}
+
+.open-btn:hover {
+    background-color: #45a049;
+}
+
+.add-item-container {
+    background-color: #ffffff;
+    padding: 30px;
+    max-width: 800px;
+    margin: 30px auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header für die Seite */
+.add-item-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+/* Eingabefelder */
+.add-item-container label {
+    display: block;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.add-item-container input[type="text"],
+.add-item-container input[type="number"],
+.add-item-container input[type="file"],
+.add-item-container select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.add-item-container input[type="file"] {
+    padding: 0;
+}
+
+.add-item-container input[type="text"]:focus,
+.add-item-container input[type="number"]:focus,
+.add-item-container select:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Button zum Absenden des Formulars */
+.add-item-container button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.2rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.add-item-container button:hover {
+    background-color: #45a049;
+}
+
+/* Styling für Rückmeldungen oder Fehlernachrichten */
+.message {
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.error {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Responsives Design */
+@media (max-width: 768px) {
+    .add-item-container {
+        padding: 20px;
+        margin: 20px;
+    }
+}

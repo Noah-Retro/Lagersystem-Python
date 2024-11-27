@@ -1,0 +1,37 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Header -->
+    <header>
+        <h1>Artikelübersicht</h1>
+    </header>  
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name <button class="sort_button">⬆️</button></th>
+                <th>Menge</th>
+                <th>Preis</th>
+                <th>Bild</th>
+                <th>Lagerort</th>
+                <th>Stat Sheet</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item['name'] }}</td>
+                <td>{{ item['menge'] }}</td>
+                <td>{{ item['preis'] }} €</td>
+                <td><img src="{{ url_for('static', filename='uploads/' + item['bild']) }}" alt="Bild"></td>
+                <td>{{ item['lagerort'] }}</td>
+                <td><img src="{{ url_for('static', filename='uploads/' + item['stat_sheet']) }}" alt="Stat Sheet"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('add_item') }}" class="add-item-link">Neuen Artikel Hinzufügen</a>
+
+{% endblock %}
