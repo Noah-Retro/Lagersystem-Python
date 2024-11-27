@@ -1,0 +1,77 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+    }
+    .card {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        width: 300px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+    .card:hover {
+        transform: scale(1.05);
+    }
+    .card-img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+    .card-body {
+        padding: 15px;
+    }
+    .card-body h3 {
+        margin: 0;
+        font-size: 20px;
+        color: #333;
+    }
+    .card-body p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #555;
+    }
+    .stat-sheet {
+        margin-top: 10px;
+    }
+    .stat-sheet img {
+        width: 100%;
+        height: auto;
+        border-radius: 5px;
+    }
+</style>
+    <div class="card-container">
+        <div class="card">
+            <a href="{{ url_for('static', filename='uploads/' + item['bild']) }}"><img src="{{ url_for('static', filename='uploads/' + item['bild']) }}" alt="Bild" class="card-img"></a>
+            <div class="card-body">
+                <h3>{{ item['name'] }}</h3>
+                <p><strong>Menge:</strong> {{ item['menge'] }}</p>
+                <p><strong>Preis:</strong> {{ item['preis'] }} €</p>
+                <p><strong>Lagerort:</strong> {{ item['lagerort'] }}</p>
+                <div class="stat-sheet">
+                    <p><strong>Stat Sheet:</strong></p>
+                    <a href="{{ url_for('static', filename='uploads/' + item['stat_sheet']) }}"><img src="{{ url_for('static', filename='uploads/' + item['stat_sheet']) }}" alt="Stat Sheet"></a>
+                </div>
+            </div>
+            <a href="{{ url_for('delete',id=item['id'])}}">Löschen</a>
+        </div>
+    </div>
+
+    <a href="{{ url_for('add_item') }}" class="add-item-link">Neuen Artikel Hinzufügen</a>
+
+{% endblock %}

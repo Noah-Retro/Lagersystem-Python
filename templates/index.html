@@ -6,11 +6,23 @@
     <header>
         <h1>Artikelübersicht</h1>
     </header>  
-
+    <div class="dropdown">
+        <button onclick="myFunction()" class="dropbtn">Sort by</button>
+        <div class="dropdown-options">
+          <a href="{{ url_for('sort',sort_term='name ASC')}}">Name⬆️</a>
+          <a href="{{ url_for('sort',sort_term='name DESC')}}">Name⬇️</a>
+          <a href="{{ url_for('sort',sort_term='menge ASC')}}">Menge⬆️</a>
+          <a href="{{ url_for('sort',sort_term='menge DESC')}}">Menge⬇️</a>
+          <a href="{{ url_for('sort',sort_term='preis ASC')}}">Prise⬆️</a>
+          <a href="{{ url_for('sort',sort_term='preis DESC')}}">Preis⬇️</a>
+          <a href="{{ url_for('sort',sort_term='lagerort ASC')}}">Lagerort⬆️</a>
+          <a href="{{ url_for('sort',sort_term='lagerort DESC')}}">Lagerort⬇️</a>
+        </div>
+      </div>
     <table>
         <thead>
             <tr>
-                <th>Name <button class="sort_button">⬆️</button></th>
+                <th>Name</th>
                 <th>Menge</th>
                 <th>Preis</th>
                 <th>Bild</th>
@@ -19,18 +31,18 @@
             </tr>
         </thead>
         <tbody>
-            {% if items != [] %}
-                {% for item in items %}
+        
+            {% for item in items %}
                 <tr>
-                    <td>{{ item['name'] }}</td>
+                    <td><a href="{{ url_for('item_view', item_id=item['id']) }}">{{ item['name'] }}</a></td>
                     <td>{{ item['menge'] }}</td>
                     <td>{{ item['preis'] }} €</td>
                     <td><img src="{{ url_for('static', filename='uploads/' + item['bild']) }}" alt="Bild"></td>
                     <td>{{ item['lagerort'] }}</td>
                     <td><img src="{{ url_for('static', filename='uploads/' + item['stat_sheet']) }}" alt="Stat Sheet"></td>
                 </tr>
-                {% endfor %}
-            {% endif %}
+            {% endfor %}
+        
         </tbody>
     </table>
 

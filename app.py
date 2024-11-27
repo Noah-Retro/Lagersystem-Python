@@ -1,3 +1,4 @@
+from string import capwords
 from flask import Flask, render_template, request, redirect, url_for, flash
 import sqlite3
 import os
@@ -44,8 +45,8 @@ def add_item():
             return redirect(url_for('add_item'))
 
         if image_file and allowed_file(image_file.filename) and stat_sheet_file and allowed_file(stat_sheet_file.filename):
-            image_filename = str(uuid.uuid4().hex)
-            stat_sheet_filename = str(uuid.uuid4().hex)
+            image_filename = str(uuid.uuid4().hex)+"."+image_file.filename.rsplit('.', 1)[1].lower()
+            stat_sheet_filename = str(uuid.uuid4().hex)+"."+stat_sheet_file.filename.rsplit('.', 1)[1].lower()
             image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
             stat_sheet_file.save(os.path.join(app.config['UPLOAD_FOLDER'], stat_sheet_filename))
 
@@ -72,6 +73,17 @@ def search_item():
     conn.close()
     return render_template('index.html', items=items)
 
+@app.route('/sort/<sort_term>', methods=['GET'])
+def sort(sort_term):
+    print(sort_term)
+    conn = get_db_connection()
+    search_str = f"SELECT * FROM lager ORDER BY {str(sort_term).lower()}"
+    items = conn.execute( search_str).fetchall()
+    conn.close()
+    for i in items:
+        print(i["name"])
+    return render_template('index.html', items=items)
+
 # Funktion zur Überprüfung der Dateiendungen
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
@@ -85,6 +97,23 @@ def connect_database():
 def admin_page():
     # Logik für die Admin-Seite
     return render_template('admin_page.html')
+
+@app.route('/item_view/<item_id>')
+def item_view(item_id):
+    conn = get_db_connection()
+    item = conn.execute('SELECT * FROM lager WHERE id IS ?', ( item_id ,)).fetchone()
+    conn.close()
+    print(item)
+    return render_template('item_view.html', item=item)
+
+@app.route('/delete/<int:id>')
+def delete(id):
+    conn = get_db_connection()
+    item = conn.execute('DELETE FROM lager WHERE id IS ?', ( id ,)).fetchone()
+    conn.commit()
+    conn.close()
+    print(item)
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
