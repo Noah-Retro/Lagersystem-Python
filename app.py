@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import sqlite3
 import os
-from werkzeug.utils import secure_filename
 import uuid
 
 app = Flask(__name__)
@@ -69,7 +68,6 @@ def add_item():
 def search_item():
     search_term = request.args.get('search_term', '')
     conn = get_db_connection()
-    print("!!!!!"+search_term+"!!!!!")
     items = conn.execute('SELECT * FROM lager WHERE name LIKE ?', ('%' + search_term + '%',)).fetchall()
     conn.close()
     return render_template('index.html', items=items)

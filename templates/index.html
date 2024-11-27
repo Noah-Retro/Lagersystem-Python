@@ -19,16 +19,18 @@
             </tr>
         </thead>
         <tbody>
-            {% for item in items %}
-            <tr>
-                <td>{{ item['name'] }}</td>
-                <td>{{ item['menge'] }}</td>
-                <td>{{ item['preis'] }} €</td>
-                <td><img src="{{ url_for('static', filename='uploads/' + item['bild']) }}" alt="Bild"></td>
-                <td>{{ item['lagerort'] }}</td>
-                <td><img src="{{ url_for('static', filename='uploads/' + item['stat_sheet']) }}" alt="Stat Sheet"></td>
-            </tr>
-            {% endfor %}
+            {% if items != [] %}
+                {% for item in items %}
+                <tr>
+                    <td>{{ item['name'] }}</td>
+                    <td>{{ item['menge'] }}</td>
+                    <td>{{ item['preis'] }} €</td>
+                    <td><img src="{{ url_for('static', filename='uploads/' + item['bild']) }}" alt="Bild"></td>
+                    <td>{{ item['lagerort'] }}</td>
+                    <td><img src="{{ url_for('static', filename='uploads/' + item['stat_sheet']) }}" alt="Stat Sheet"></td>
+                </tr>
+                {% endfor %}
+            {% endif %}
         </tbody>
     </table>
 
