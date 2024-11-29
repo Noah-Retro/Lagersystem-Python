@@ -60,7 +60,6 @@ def add_item():
         else:
             flash('Bitte stellen Sie sicher, dass beide Bilder im richtigen Format vorliegen!')
             return redirect(url_for('add'))
-
     return render_template('add_item.html')
 
 # Route für das Suchen von Artikeln nach Name
@@ -91,27 +90,23 @@ def allowed_file(filename):
 def connect_database():
     return "Datenbank verbinden"
 
-
-@app.route('/admin_page')
-def admin_page():
-    # Logik für die Admin-Seite
-    return render_template('admin_page.html')
-
 @app.route('/item_view/<item_id>')
 def item_view(item_id):
     conn = get_db_connection()
     item = conn.execute('SELECT * FROM lager WHERE id IS ?', ( item_id ,)).fetchone()
     conn.close()
-    print(item)
     return render_template('item_view.html', item=item)
 
 @app.route('/delete/<int:id>')
 def delete(id):
-    conn = get_db_connection()
-    item = conn.execute('DELETE FROM lager WHERE id IS ?', ( id ,)).fetchone()
-    conn.commit()
-    conn.close()
-    print(item)
+    try:
+        conn = get_db_connection()
+        conn.execute('DELETE FROM lager WHERE id IS ?', ( id ,)).fetchone()
+        conn.commit()
+        conn.close()
+    except:
+        flash("Something went wrong with the action","error")
+        return(redirect(url_for('index')))
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
