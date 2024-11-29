@@ -36,7 +36,7 @@
                 <tr>
                     <td><a href="{{ url_for('item_view', item_id=item['id']) }}">{{ item['name'] }}</a></td>
                     <td>{{ item['menge'] }}</td>
-                    <td>{{ item['preis'] }} €</td>
+                    <td>{{ item['preis'] }} Fr.</td>
                     <td><img src="{{ url_for('static', filename='uploads/' + item['bild']) }}" alt="Bild"></td>
                     <td>{{ item['lagerort'] }}</td>
                     <td><img src="{{ url_for('static', filename='uploads/' + item['stat_sheet']) }}" alt="Stat Sheet"></td>

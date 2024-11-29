@@ -7,6 +7,7 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Zum Verwalten von Flash-Nachrichten
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['DATA_BASE']='lager.db'
 
 # Sicherstellen, dass der Upload-Ordner existiert
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
@@ -14,8 +15,8 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 
 # Standard-Datenbankverbindung
 def get_db_connection():
-    conn = sqlite3.connect('lager.db')
-    conn.row_factory = sqlite3.Row  # Um auf die Spalten wie Dictionary zuzugreifen
+    conn = sqlite3.connect(app.config['DATA_BASE'])
+    conn.row_factory = sqlite3.Row  
     return conn
 
 # Route für die Startseite und Anzeige der Artikel
@@ -27,40 +28,42 @@ def index():
     return render_template('index.html', items=items)
 
 # Route für das Hinzufügen eines neuen Artikels
-@app.route('/add', methods=['GET', 'POST'])
+@app.route('/add_item', methods=['GET', 'POST'])
 def add_item():
-    if request.method == 'POST':
-        name = request.form['name']
-        menge = request.form['menge']
-        preis = request.form['preis']
-        beschreibung = request.form['beschreibung']
-        lagerort = request.form['lagerort']
-        
-        image_file = request.files['bild']
-        stat_sheet_file = request.files['stat_sheet']
-        
-        if not name or not menge or not preis or not beschreibung or not lagerort:
-            flash('Alle Felder müssen ausgefüllt sein!')
-            return redirect(url_for('add_item'))
+    if request.method != 'POST':
+        return render_template('add_item.html')
+    
+    name = request.form['name']
+    menge = request.form['menge']
+    preis = request.form['preis']
+    beschreibung = request.form['beschreibung']
+    lagerort = request.form['lagerort']
+    
+    image_file = request.files['bild']
+    stat_sheet_file = request.files['stat_sheet']
+    
+    if not name or not menge or not preis or not beschreibung or not lagerort:
+        flash('Alle Felder müssen ausgefüllt sein!')
+        return redirect(url_for('add_item'))
 
-        if image_file and allowed_file(image_file.filename) and stat_sheet_file and allowed_file(stat_sheet_file.filename):
-            image_filename = str(uuid.uuid4().hex)+"."+image_file.filename.rsplit('.', 1)[1].lower()
-            stat_sheet_filename = str(uuid.uuid4().hex)+"."+stat_sheet_file.filename.rsplit('.', 1)[1].lower()
-            image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
-            stat_sheet_file.save(os.path.join(app.config['UPLOAD_FOLDER'], stat_sheet_filename))
+    if image_file and allowed_file(image_file.filename) and stat_sheet_file and allowed_file(stat_sheet_file.filename):
+        image_filename = str(uuid.uuid4().hex)+"."+image_file.filename.rsplit('.', 1)[1].lower()
+        stat_sheet_filename = str(uuid.uuid4().hex)+"."+stat_sheet_file.filename.rsplit('.', 1)[1].lower()
+        image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
+        stat_sheet_file.save(os.path.join(app.config['UPLOAD_FOLDER'], stat_sheet_filename))
 
-            conn = get_db_connection()
-            conn.execute('INSERT INTO lager (name, menge, preis, bild, beschreibung, lagerort, stat_sheet) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                         (name, menge, preis, image_filename, beschreibung, lagerort, stat_sheet_filename))
-            conn.commit()
-            conn.close()
+        conn = get_db_connection()
+        conn.execute('INSERT INTO lager (name, menge, preis, bild, beschreibung, lagerort, stat_sheet) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                        (name, menge, preis, image_filename, beschreibung, lagerort, stat_sheet_filename))
+        conn.commit()
+        conn.close()
 
-            flash('Artikel erfolgreich hinzugefügt!')
-            return redirect(url_for('index'))
-        else:
-            flash('Bitte stellen Sie sicher, dass beide Bilder im richtigen Format vorliegen!')
-            return redirect(url_for('add'))
-    return render_template('add_item.html')
+        flash('Artikel erfolgreich hinzugefügt!')
+        return redirect(url_for('index'))
+    
+    flash('Bitte stellen Sie sicher, dass beide Bilder im richtigen Format vorliegen!')
+    return redirect(url_for('add_item'))
+    
 
 # Route für das Suchen von Artikeln nach Name
 @app.route('/search', methods=['GET'])
@@ -78,17 +81,15 @@ def sort(sort_term):
     search_str = f"SELECT * FROM lager ORDER BY {str(sort_term).lower()}"
     items = conn.execute( search_str).fetchall()
     conn.close()
-    for i in items:
-        print(i["name"])
     return render_template('index.html', items=items)
 
 # Funktion zur Überprüfung der Dateiendungen
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-@app.route('/connect_database')
+@app.route('/connect_database', methods=['GET', 'POST'])
 def connect_database():
-    return "Datenbank verbinden"
+    return render_template('connect_database.html')
 
 @app.route('/item_view/<item_id>')
 def item_view(item_id):
@@ -99,14 +100,14 @@ def item_view(item_id):
 
 @app.route('/delete/<int:id>')
 def delete(id):
-    try:
-        conn = get_db_connection()
-        conn.execute('DELETE FROM lager WHERE id IS ?', ( id ,)).fetchone()
-        conn.commit()
-        conn.close()
-    except:
-        flash("Something went wrong with the action","error")
-        return(redirect(url_for('index')))
+    conn = get_db_connection()
+    item = conn.execute('SELECT * FROM lager WHERE id IS ?', (id, )).fetchall()
+    conn.execute('DELETE FROM lager WHERE id IS ?', ( id ,)).fetchone()
+    conn.commit()
+    conn.close()
+    
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item[0]['bild']))
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item[0]['stat_sheet']))
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
